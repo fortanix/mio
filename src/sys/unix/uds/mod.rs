@@ -20,6 +20,7 @@ cfg_os_poll! {
     use std::path::Path;
     use std::{io, mem};
 
+    #[cfg(not(target_env = "fortanixvme"))]
     pub(crate) mod datagram;
     pub(crate) mod listener;
     pub(crate) mod stream;
