@@ -57,7 +57,7 @@ winapi = { version = "0.3", features = ["winsock2", "mswsock"] }
 ntapi  = "0.3"
 
 [target.x86_64-fortanix-unknown-sgx.dependencies]
-async-usercalls = { git = "https://github.com/fortanix/rust-sgx.git", branch = "mz/async-usercalls" } # FIXME: use published version once available
+async-usercalls = { git = "https://github.com/fortanix/rust-sgx.git", branch = "yx/new-async-usercalls_update-mbedtls" } # FIXME: use published version once available
 crossbeam-channel = "0.4"
 
 [dev-dependencies]
