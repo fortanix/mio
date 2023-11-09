@@ -70,6 +70,9 @@ crossbeam-channel = "0.5"
 env_logger = { version = "0.9.3", default-features = false }
 rand = "0.8"
 
+[build-dependencies]
+rustc_version = "0.2"
+
 [package.metadata.docs.rs]
 all-features = true
 rustdoc-args = ["--cfg", "docsrs", "--generate-link-to-definition"]
