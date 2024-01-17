@@ -63,7 +63,7 @@ wasi = "0.11.0"
 libc = "0.2.149"
 
 [target.x86_64-fortanix-unknown-sgx.dependencies]
-async-usercalls = { git = "https://github.com/fortanix/rust-sgx.git", branch = "vas/async-usercalls-scratch" } # FIXME: use published version once available
+async-usercalls = { git = "https://github.com/vn971/rust-sgx.git", branch = "vas/async-usercalls-scratch" } # FIXME: use published version once available
 crossbeam-channel = "0.5"
 
 [dev-dependencies]
