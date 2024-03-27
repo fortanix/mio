@@ -1,3 +1,5 @@
+#![cfg_attr(compiler_has_send_sgx_types, feature(stmt_expr_attributes))]
+#![cfg_attr(not(compiler_has_send_sgx_types), allow(suspicious_auto_trait_impls))]
 #![deny(
     missing_docs,
     missing_debug_implementations,
@@ -10,6 +12,7 @@
 #![cfg_attr(test, deny(warnings))]
 // Disallow warnings in examples.
 #![doc(test(attr(deny(warnings))))]
+#![cfg_attr(target_env = "sgx", feature(sgx_platform))]
 
 //! Mio is a fast, low-level I/O library for Rust focusing on non-blocking APIs
 //! and event notification for building high performance I/O apps with as little
