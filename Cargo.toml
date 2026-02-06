@@ -66,6 +66,9 @@ libc = "0.2.149"
 async-usercalls = "0.6"
 crossbeam-channel = "0.5"
 
+[patch.crates-io]
+libc = { git = "https://github.com/fortanix/libc.git", branch = "fortanixvme-2023-05-07-alpha" }
+
 [dev-dependencies]
 env_logger = { version = "0.9.3", default-features = false }
 rand = "0.8"
