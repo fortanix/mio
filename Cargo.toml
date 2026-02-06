@@ -68,6 +68,7 @@ crossbeam-channel = "0.5"
 
 [patch.crates-io]
 async-usercalls = { git = "https://github.com/fortanix/rust-sgx.git", branch = "master" }
+libc = { git = "https://github.com/fortanix/libc.git", branch = "fortanixvme-2023-05-07-alpha" }
 
 [dev-dependencies]
 env_logger = { version = "0.9.3", default-features = false }
