@@ -108,3 +108,6 @@ required-features = ["os-poll", "net"]
 # set number of threads so tests can run properly
 [package.metadata.fortanix-sgx]
 threads = 100
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(compiler_has_send_sgx_types)', 'cfg(mio_unsupported_force_poll_poll)', 'cfg(mio_unsupported_force_waker_pipe)'] }
