@@ -33,7 +33,7 @@ mod udp;
 #[cfg(not(any(target_os = "wasi", target_env = "sgx")))]
 pub use self::udp::UdpSocket;
 
-#[cfg(unix)]
+#[cfg(all(unix, not(target_env = "fortanixvme")))]
 mod uds;
-#[cfg(unix)]
+#[cfg(all(unix, not(target_env = "fortanixvme")))]
 pub use self::uds::{SocketAddr, UnixDatagram, UnixListener, UnixStream};
