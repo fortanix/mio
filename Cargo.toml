@@ -63,7 +63,7 @@ wasi = "0.11.0"
 libc = "0.2.149"
 
 [target.x86_64-fortanix-unknown-sgx.dependencies]
-async-usercalls = "0.6"
+async-usercalls = { git = "https://github.com/fortanix/rust-sgx.git", branch = "thomasvs/userref-sound" }
 crossbeam-channel = "0.5"
 
 [dev-dependencies]
