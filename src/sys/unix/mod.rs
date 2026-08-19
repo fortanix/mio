@@ -29,7 +29,9 @@ cfg_os_poll! {
 
         pub(crate) mod tcp;
         pub(crate) mod udp;
+        #[cfg(not(target_env = "fortanixvme"))]
         pub(crate) mod uds;
+        #[cfg(not(target_env = "fortanixvme"))]
         pub use self::uds::SocketAddr;
     }
 

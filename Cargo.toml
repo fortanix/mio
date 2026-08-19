@@ -66,6 +66,9 @@ libc = "0.2.149"
 async-usercalls = "0.6"
 crossbeam-channel = "0.5"
 
+[patch.crates-io]
+libc = { git = "https://github.com/fortanix/libc.git", branch = "fortanixvme-2023-05-07-alpha" }
+
 [dev-dependencies]
 env_logger = { version = "0.9.3", default-features = false }
 rand = "0.8"
@@ -108,3 +111,6 @@ required-features = ["os-poll", "net"]
 # set number of threads so tests can run properly
 [package.metadata.fortanix-sgx]
 threads = 100
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(compiler_has_send_sgx_types)', 'cfg(mio_unsupported_force_poll_poll)', 'cfg(mio_unsupported_force_waker_pipe)'] }
