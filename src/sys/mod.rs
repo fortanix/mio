@@ -88,7 +88,7 @@ cfg_not_os_poll! {
         pub use self::unix::SourceFd;
     }
 
-    #[cfg(unix)]
+    #[cfg(all(unix, not(target_env = "fortanixvme")))]
     cfg_net! {
         pub use self::unix::SocketAddr;
     }
