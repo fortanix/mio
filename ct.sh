@@ -5,6 +5,7 @@ export RUST_BACKTRACE=1
 # Chosen toolchains:
 #    - nightly-2023-05-07: older than rustc 1.78.0, compiler_has_send_sgx_types is not defined (check build.rs)
 #    - nightly-2025-10-09: newer than rustc 1.78.0, compiler_has_send_sgx_types is defined
+#    - nightly: most recent version installed on the system
 #    - mybuild: built from the fortanix/rust fork, supports the fortanixvme target
 #
 # Note: nightly-2024-02-20 is a nightly 1.78.0 version, so zerocopy (a dev-dep via rand) enables #[diagnostic],
@@ -14,8 +15,10 @@ combos=(
      "nightly-2023-05-07-x86_64-unknown-linux-gnu:x86_64-unknown-linux-gnu"
      "nightly-2025-10-09-x86_64-unknown-linux-gnu:x86_64-fortanix-unknown-sgx"
      "nightly-2025-10-09-x86_64-unknown-linux-gnu:x86_64-unknown-linux-gnu"
+     "nightly:x86_64-fortanix-unknown-sgx"
+     "nightly:x86_64-unknown-linux-gnu"
      "mybuild:x86_64-unknown-linux-gnu"
-    "mybuild:x86_64-unknown-linux-fortanixvme"
+     "mybuild:x86_64-unknown-linux-fortanixvme"
 )
 
 feature_sets=(

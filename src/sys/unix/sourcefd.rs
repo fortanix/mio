@@ -88,7 +88,6 @@ use std::os::unix::io::RawFd;
 ///     }
 /// }
 /// ```
-#[allow(dead_code)]
 #[derive(Debug)]
 pub struct SourceFd<'a>(pub &'a RawFd);
 
