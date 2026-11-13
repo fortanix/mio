@@ -15,7 +15,7 @@ combos=(
      "nightly-2025-10-09-x86_64-unknown-linux-gnu:x86_64-fortanix-unknown-sgx"
      "nightly-2025-10-09-x86_64-unknown-linux-gnu:x86_64-unknown-linux-gnu"
      "mybuild:x86_64-unknown-linux-gnu"
-     "mybuild:x86_64-unknown-linux-fortanixvme"
+    "mybuild:x86_64-unknown-linux-fortanixvme"
 )
 
 feature_sets=(
@@ -28,7 +28,7 @@ feature_sets=(
     "net,os-poll,os-ext"
 )
 
-run_tests=0
+run_tests_opt="--no-run"
 
 for combo in "${combos[@]}"; do
     IFS=':' read -r toolchain target <<< "$combo"
@@ -70,12 +70,10 @@ for combo in "${combos[@]}"; do
 
         cargo +"$toolchain" build --all-targets --features "$features" --target "$target"
 
-        if [ "$run_tests" -ne 0 ]; then
-            if [ -z "$features" ]; then
-                cargo +"$toolchain" test --target "$target"
-            else
-                cargo +"$toolchain" test --features "$features" --target "$target"
-            fi
+        if [ -z "$features" ]; then
+            cargo +"$toolchain" test "$run_tests_opt" --target "$target"
+        else
+            cargo +"$toolchain" test "$run_tests_opt" --features "$features" --target "$target"
         fi
     done
 done
