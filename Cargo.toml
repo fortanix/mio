@@ -115,4 +115,9 @@ threads = 100
 [package.metadata.fortanix-vme]
 
 [lints.rust]
-unexpected_cfgs = { level = "warn", check-cfg = ['cfg(compiler_has_send_sgx_types)', 'cfg(mio_unsupported_force_poll_poll)', 'cfg(mio_unsupported_force_waker_pipe)'] }
+unexpected_cfgs = { level = "warn", check-cfg = [
+    'cfg(compiler_has_send_sgx_types)',
+    'cfg(mio_unsupported_force_poll_poll)',
+    'cfg(mio_unsupported_force_waker_pipe)',
+    'cfg(target_env, values("fortanixvme"))',
+] }
