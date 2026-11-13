@@ -41,6 +41,11 @@ for combo in "${combos[@]}"; do
         unset RUST_TEST_THREADS
     fi
 
+    if [[ "$target" == *sgx* ]]; then
+        # make sure the sgx target is installed for this toolchain
+        rustup +"$toolchain" target add "$target"
+    fi
+
     for features in "${feature_sets[@]}"; do
         # SGX only builds when `net` and `os-poll` (also enabled by `os-ext`) are both on.
         # Without `os-poll`, mio uses its shell backend, which has no SGX `IoSourceState::register`.
