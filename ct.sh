@@ -1,17 +1,51 @@
 #!/bin/bash -ex
 export RUST_BACKTRACE=1
 
-toolchains=("nightly-2023-05-07-x86_64-unknown-linux-gnu" "nightly-2024-02-20-x86_64-unknown-linux-gnu")
-platforms=("x86_64-fortanix-unknown-sgx" "x86_64-unknown-linux-gnu")
+# Each entry is "toolchain:target". Add or remove lines to choose what gets tested.
+combos=(
+    # "nightly-2023-05-07-x86_64-unknown-linux-gnu:x86_64-fortanix-unknown-sgx"
+    # "nightly-2023-05-07-x86_64-unknown-linux-gnu:x86_64-unknown-linux-gnu"
+    # "nightly-2024-02-20-x86_64-unknown-linux-gnu:x86_64-fortanix-unknown-sgx"
+    # "nightly-2024-02-20-x86_64-unknown-linux-gnu:x86_64-unknown-linux-gnu"
+      "mybuild:x86_64-unknown-linux-gnu"
+    #"mybuild:x86_64-unknown-linux-fortanixvme"
+)
 
-for toolchain in "${toolchains[@]}"; do
-    for platform in "${platforms[@]}"; do
-        echo "toolchain: $toolchain"
-        echo "platform: $platform"
-        echo ""
-        cargo +${toolchain} test --target  ${platform}
-        cargo +${toolchain} test --features "net,os-poll" --target  ${platform}
-        cargo +${toolchain} test --features "net,os-ext" --target  ${platform}
-        cargo +${toolchain} test --features "net,os-poll,os-ext" --target ${platform}
+feature_sets=(
+    ""
+    "net"
+    "os-ext"
+    "os-poll"
+    "net,os-poll"
+    "net,os-ext"
+    "net,os-poll,os-ext"
+)
+
+run_tests=0
+
+for combo in "${combos[@]}"; do
+    IFS=':' read -r toolchain target <<< "$combo"
+    echo "toolchain: $toolchain"
+    echo "target: $target"
+    echo ""
+
+    # fortanix-vme-runner binds a fixed vsock port (10000), so tests that
+    # start their own runner (doctests) can't run in parallel.
+    if [[ "$target" == *fortanixvme* ]]; then
+        export RUST_TEST_THREADS=1
+    else
+        unset RUST_TEST_THREADS
+    fi
+
+    for features in "${feature_sets[@]}"; do
+        cargo +"$toolchain" build --features "$features" --target "$target"
+
+        if [ "$run_tests" -ne 0 ]; then
+            if [ -z "$features" ]; then
+                cargo +"$toolchain" test --target "$target"
+            else
+                cargo +"$toolchain" test --features "$features" --target "$target"
+            fi
+        fi
     done
 done
