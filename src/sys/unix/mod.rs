@@ -24,16 +24,20 @@ cfg_os_poll! {
     mod waker;
     pub(crate) use self::waker::Waker;
 
+    #[cfg(not(target_env = "fortanixvme"))]
     cfg_net! {
         mod net;
 
         pub(crate) mod tcp;
-        #[cfg(not(target_env = "fortanixvme"))]
         pub(crate) mod udp;
-        #[cfg(not(target_env = "fortanixvme"))]
         pub(crate) mod uds;
-        #[cfg(not(target_env = "fortanixvme"))]
         pub use self::uds::SocketAddr;
+    }
+
+    #[cfg(target_env = "fortanixvme")]
+    cfg_net! {
+        #[path = "fortanixvme/tcp.rs"]
+        pub(crate) mod tcp;
     }
 
     cfg_io_source! {

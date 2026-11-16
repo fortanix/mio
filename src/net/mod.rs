@@ -28,9 +28,9 @@
 mod tcp;
 pub use self::tcp::{TcpListener, TcpStream};
 
-#[cfg(not(any(target_os = "wasi", target_env = "sgx", target_env = "fortanixvme")))]
+#[cfg(not(any(target_os = "wasi", target_env = "sgx", all(unix, target_env = "fortanixvme"))))]
 mod udp;
-#[cfg(not(any(target_os = "wasi", target_env = "sgx", target_env = "fortanixvme")))]
+#[cfg(not(any(target_os = "wasi", target_env = "sgx", all(unix, target_env = "fortanixvme"))))]
 pub use self::udp::UdpSocket;
 
 #[cfg(all(unix, not(target_env = "fortanixvme")))]
