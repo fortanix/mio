@@ -12,8 +12,10 @@ use std::os::wasi::io::{AsRawFd, FromRawFd, IntoRawFd, RawFd};
 use std::os::windows::io::{AsRawSocket, FromRawSocket, IntoRawSocket, RawSocket};
 
 use crate::io_source::IoSource;
-#[cfg(not(any(target_os = "wasi", target_env = "sgx")))]
+#[cfg(not(any(target_os = "wasi", target_env = "sgx", all(unix, target_env = "fortanixvme"))))]
 use crate::sys::tcp::{connect, new_for_addr};
+#[cfg(all(unix, target_env = "fortanixvme"))]
+use crate::sys::tcp::{connect};
 use crate::{event, Interest, Registry, Token};
 #[cfg(target_env = "sgx")]
 use crate::sys;
@@ -94,7 +96,7 @@ impl TcpStream {
     /// [write interest]: Interest::WRITABLE
     #[cfg(not(target_os = "wasi"))]
     pub fn connect(addr: SocketAddr) -> io::Result<TcpStream> {
-        #[cfg(not(target_env = "sgx"))] {
+        #[cfg(not(any(target_env = "sgx", all(unix, target_env = "fortanixvme"))))] {
             let socket = new_for_addr(addr)?;
             #[cfg(unix)]
             let stream = unsafe { TcpStream::from_raw_fd(socket) };
@@ -106,6 +108,12 @@ impl TcpStream {
 
         #[cfg(target_env = "sgx")] {
             sys::tcp::connect(addr).map(TcpStream::internal_new)
+        }
+
+        #[cfg(all(unix, target_env = "fortanixvme"))] {
+            let stream = net::TcpStream::connect(addr)?;
+            connect(&stream, addr)?;
+            Ok(TcpStream::from_std(stream))
         }
     }
 

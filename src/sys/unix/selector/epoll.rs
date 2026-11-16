@@ -5,7 +5,7 @@ use std::os::unix::io::{AsRawFd, RawFd};
 #[cfg(debug_assertions)]
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::time::Duration;
-use std::{cmp, i32, io, ptr};
+use std::{cmp, io, ptr};
 
 /// Unique id for use as `SelectorId`.
 #[cfg(debug_assertions)]
@@ -77,7 +77,7 @@ impl Selector {
         #[cfg(target_pointer_width = "32")]
         const MAX_SAFE_TIMEOUT: u128 = 1789569;
         #[cfg(not(target_pointer_width = "32"))]
-        const MAX_SAFE_TIMEOUT: u128 = libc::c_int::max_value() as u128;
+        const MAX_SAFE_TIMEOUT: u128 = libc::c_int::MAX as u128;
 
         let timeout = timeout
             .map(|to| {

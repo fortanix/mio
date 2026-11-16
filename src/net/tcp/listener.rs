@@ -12,10 +12,12 @@ use std::{fmt, io};
 
 use crate::io_source::IoSource;
 use crate::net::TcpStream;
-#[cfg(unix)]
+#[cfg(all(unix, not(target_env = "fortanixvme")))]
 use crate::sys::tcp::set_reuseaddr;
-#[cfg(not(any(target_os = "wasi", target_env = "sgx")))]
+#[cfg(not(any(target_os = "wasi", target_env = "sgx", all(unix, target_env = "fortanixvme"))))]
 use crate::sys::tcp::{bind, listen, new_for_addr};
+#[cfg(all(unix, target_env = "fortanixvme"))]
+use crate::sys::tcp::{bind};
 use crate::{event, sys, Interest, Registry, Token};
 
 /// A structure representing a socket server
@@ -60,7 +62,7 @@ impl TcpListener {
     /// 4. Calls `listen` on the socket to prepare it to receive new connections.
     #[cfg(not(target_os = "wasi"))]
     pub fn bind(addr: SocketAddr) -> io::Result<TcpListener> {
-        #[cfg(not(target_env = "sgx"))] {
+        #[cfg(not(any(target_env = "sgx", all(unix, target_env = "fortanixvme"))))] {
             let socket = new_for_addr(addr)?;
             #[cfg(unix)]
             let listener = unsafe { TcpListener::from_raw_fd(socket) };
@@ -85,6 +87,14 @@ impl TcpListener {
         #[cfg(target_env = "sgx")] {
             Ok(TcpListener {
                 inner: IoSource::new(sys::tcp::bind(addr)?),
+            })
+        }
+
+        #[cfg(all(unix, target_env = "fortanixvme"))] {
+            let listener = net::TcpListener::bind(addr)?;
+            bind(&listener, addr)?;
+            Ok(TcpListener {
+                inner: IoSource::new(listener),
             })
         }
     }
