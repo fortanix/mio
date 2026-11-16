@@ -9,7 +9,7 @@ use std::{fmt, io};
 
 use mio::event::Source;
 use mio::net::{TcpListener, TcpStream};
-#[cfg(not(target_env = "sgx"))]
+#[cfg(not(any(target_env = "sgx", target_env = "fortanixvme")))]
 use mio::net::UdpSocket;
 use mio::{event, Events, Interest, Poll, Registry, Token};
 
@@ -235,7 +235,7 @@ pub fn registry_ops_flow(
     registry.reregister(source, token, final_interests)
 }
 
-#[cfg(not(target_env = "sgx"))] // no UDP support in SGX.
+#[cfg(not(any(target_env = "sgx", target_env = "fortanixvme")))] // no UDP support in SGX and fortanixvme.
 #[test]
 fn registry_operations_are_thread_safe() {
     let (mut poll, mut events) = init_with_poll();
@@ -322,7 +322,7 @@ fn registry_operations_are_thread_safe() {
     handle3.join().unwrap();
 }
 
-#[cfg(not(target_env = "sgx"))] // no UDP support in SGX.
+#[cfg(not(any(target_env = "sgx", target_env = "fortanixvme")))] // no UDP support in and fortanixvme.
 #[test]
 fn register_during_poll() {
     let (mut poll, mut events) = init_with_poll();
@@ -371,7 +371,7 @@ fn register_during_poll() {
 // - `reregister` can use the same token as `register`
 // - `reregister` can use different token from `register`
 // - multiple `reregister` are ok
-#[cfg(not(target_env = "sgx"))] // no UDP support in SGX.
+#[cfg(not(any(target_env = "sgx", target_env = "fortanixvme")))] // no UDP support in SGX and fortanixvme.
 #[test]
 fn reregister_interest_token_usage() {
     let (mut poll, mut events) = init_with_poll();

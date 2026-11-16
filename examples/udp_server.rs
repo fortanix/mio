@@ -1,6 +1,6 @@
 // You can run this example from the root of the mio repo:
 // cargo run --example udp_server --features="os-poll net"
-#[cfg(not(any(target_os = "wasi", target_env = "sgx")))]
+#[cfg(not(any(target_os = "wasi", target_env = "sgx", target_env = "fortanixvme")))]
 use {
     log::warn,
     mio::{Events, Interest, Poll, Token},
@@ -8,10 +8,10 @@ use {
 };
 
 // A token to allow us to identify which event is for the `UdpSocket`.
-#[cfg(not(any(target_os = "wasi", target_env = "sgx")))]
+#[cfg(not(any(target_os = "wasi", target_env = "sgx", target_env = "fortanixvme")))]
 const UDP_SOCKET: Token = Token(0);
 
-#[cfg(not(any(target_os = "wasi", target_env = "sgx")))]
+#[cfg(not(any(target_os = "wasi", target_env = "sgx", target_env = "fortanixvme")))]
 fn main() -> io::Result<()> {
     use mio::net::UdpSocket;
 
@@ -88,9 +88,9 @@ fn main() -> io::Result<()> {
     }
 }
 
-#[cfg(target_env = "sgx")]
+#[cfg(any(target_env = "sgx", target_env = "fortanixvme"))]
 fn main() {
-    println!("SGX does not support UDP yet");
+    println!("SGX and fortanixvme do not support UDP yet");
 }
 
 #[cfg(target_os = "wasi")]

@@ -28,6 +28,7 @@ cfg_os_poll! {
         mod net;
 
         pub(crate) mod tcp;
+        #[cfg(not(target_env = "fortanixvme"))]
         pub(crate) mod udp;
         #[cfg(not(target_env = "fortanixvme"))]
         pub(crate) mod uds;
